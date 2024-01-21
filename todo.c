@@ -1,22 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "todo.h"
 
 int main()
 {
-  /*
   println("*** TO DO LIST ***");
   println("1 - Add task");
   println("2 - Remove Task");
-  println("3 - Edit Task");*/
+  println("3 - Edit Task");
   
+  int option;
   // char buffer[100]; // buffer para armazenar a linha lida
 
   // printf("Digite várias linhas (Ctrl+D para encerrar no Linux ou Ctrl+Z no Windows):\n");
   
-  displayTasks();
-  // addTask();
+  printTasks();
+  /*
+  printf(">> ");
+  scanf("%d", &option);
+  
+  if(option == 1) {
+    addTask();
+    displayTasks();
+  }*/
+  
   return 0;
 }
 
@@ -46,9 +55,9 @@ void addTask() {
   free(task);
 }
 
-void displayTasks() {
-  // alocating memory for the given task
-  char** tasks = (char**) malloc(sizeof(char*) * 10);
+void printTasks() {
+  // Allocating space for a line of a task
+  char* task = malloc(TASK_SIZE);
   
   // Opening a our tasks database
   FILE *pFile = fopen("tasks.txt", "r");
@@ -57,9 +66,27 @@ void displayTasks() {
     perror("Error while trying to open the file\n");
   }
   
-  while(fgets(task, TASK_SIZE, pFile) != NULL);
-  println(task);
+  // Read and handles each line from task.txt file
+  while(fgets(task, TASK_SIZE, pFile) != NULL) {
+    int is_end_of_task = FALSE;
+    
+    handleEndOfTask(task, &is_end_of_task);
+    
+    printf("%s", task);
+    
+    if(is_end_of_task) printf("\n\n");
+  }
   
   fclose(pFile);
   free(task);
+}
+
+void handleEndOfTask(char *task, int* is_end_of_task)
+{
+  int line_length = strlen(task);
+  
+  if(task[line_length - 2] == ';') {
+    task[line_length - 2] = 0;
+    *is_end_of_task = TRUE;
+  }
 }
