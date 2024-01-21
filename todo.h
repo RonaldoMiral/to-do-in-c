@@ -5,4 +5,5 @@
 void println(char *str);
 void addTask();
 void printTasks();
-void handleEndOfTask(char *task, int* is_end_of_task);
+void handleEndOfTaskOnPrint(char *task, int* is_end_of_task);
+void checkingTaskBeforeAdding(char* task);
